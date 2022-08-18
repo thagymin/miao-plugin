@@ -22,24 +22,29 @@
 * 例如: http://127.0.0.1:1080
 * */
 
-export const enkaApi = {
-  url: 'https://enka.network/', // 请求API地址，可从上方提供的API地址中进行选择
-  proxyAgent: '' // 请求的proxy配置，如无需proxy则留空
+export const profileApi = ({ uid, Miao, Enka, diyCfg }) => {
+  let token = diyCfg?.miaoApi?.token
+  if (token && token.length === 32) {
+    return Miao
+  }
+  return Enka
 }
 
-/*
-* 单个用户请求面板的间隔时间，单位分钟
-* 不同用户的计时独立
-*
-* 因为服务数据更新需要5分钟左右，建议设置为5分钟或5分钟以上
-* 可降低对服务的压力，同时防止过度刷屏
-* */
-export const requestInterval = 5
-
-/*
-* MiaoApi面板更新地址，暂时支持B服角色
-* */
 export const miaoApi = {
   url: 'http://49.232.91.210/profile',
-  token: '请求Token'
+  token: 'miao-token',
+  listApi: ({ url, uid, token }) => {
+    return `${url}/data?uid=${uid}&token=${token}`
+  }
 }
+
+export const enkaApi = {
+  url: 'https://enka.network/',
+  userAgent: 'Miao-Plugin/3.0',
+  listApi: ({ url, uid }) => {
+    return `${url}u/${uid}/__data.json`
+  }
+}
+
+/* 请求面板的冷却时间，单位分钟 */
+export const requestInterval = 5
